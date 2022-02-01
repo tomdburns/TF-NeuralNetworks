@@ -1,0 +1,43 @@
+#!/usr/bin/env python
+
+"""
+This is used when a large set of data is being processed
+and allows the user to save time by simply combining
+file instead of re-running the SCALER program for different
+combinations
+"""
+
+
+import pandas
+from sys import argv
+
+if len(argv) != 3:
+    print "to run: tf_combiner XFILE YFILE"
+    exit()
+
+
+script, file1, file2 = argv
+
+
+X_COLS = ['b0_c', 'd0_c', 'q1_c', 'q2_c', 'U1_c', 'U2_c', 'b0_n',
+          'd0_n', 'q1_n', 'q2_n', 'U1_n', 'U2_n', 'StructuredDensity',
+          'InletTemp', 'tads', 'tblow', 'tevac', 'Pint', 'Plow', 'v0']
+Y_COLS = ['Purity', 'Recovery', 'Productivity', 'Etot', 'EPSA', 'EComp']
+
+
+def main():
+    """Main Execution"""
+    dat1 = pandas.read_csv(file1)[X_COLS]
+    dat2 = pandas.read_csv(file2)[Y_COLS]
+
+    dat1[Y_COLS] = dat2
+
+    fname = 'X-{}-Y-{}.csv'.format(file1.split('.csv')[0], file2.split('.csv')[0])
+    dat1.to_csv(fname)
+    print "{} written.".format(fname)
+
+    
+
+
+if __name__ in '__main__':
+    main()
